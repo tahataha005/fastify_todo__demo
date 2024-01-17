@@ -1,9 +1,8 @@
-import fastify from "fastify";
 import dotenv from "dotenv";
 import app from "./app";
 
 dotenv.config({
-  path: "enviroments/dev.env",
+  path: ".env",
 });
 
 app.listen(
