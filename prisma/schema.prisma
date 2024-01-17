@@ -1,0 +1,11 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+
+datasource db {
+  provider = "postgresql"
+  // dotenv is not in root folder
+  url      = env("DATABASE_URL")
+}
