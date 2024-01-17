@@ -3,6 +3,10 @@ node_modules
 
 # Local env files
 enviroments
+*.env
 
 # Build folder
 build
+
+# Database migrations
+prisma/migrations
