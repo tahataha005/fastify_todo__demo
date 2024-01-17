@@ -1,19 +1,14 @@
 import { BodySchema } from "@config/contants/types/request.type";
 
+export type LoginDto = {
+  email: string;
+  sentPassword: string;
+};
+
 export const loginSchema: BodySchema<LoginDto> = {
   properties: {
     email: { type: "string", format: "email" },
-    password: {
-      type: "string",
-      minLength: 8,
-      maxLength: 20,
-      pattern: "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
-    },
+    sentPassword: { type: "string" },
   },
-  required: ["email", "password"],
-};
-
-export type LoginDto = {
-  email: string;
-  password: string;
+  required: ["email", "sentPassword"],
 };
