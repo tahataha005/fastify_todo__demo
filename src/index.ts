@@ -1,9 +1,13 @@
 import dotenv from "dotenv";
 import app from "./app";
+import { registerRouteGroup } from "./config/utils/routes/route";
+import { authRoutes } from "./features/auth";
 
 dotenv.config({
   path: ".env",
 });
+
+registerRouteGroup("/auth", authRoutes);
 
 app.listen(
   {
