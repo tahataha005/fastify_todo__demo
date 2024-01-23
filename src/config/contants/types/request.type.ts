@@ -1,9 +1,20 @@
 export type BodySchema<T> = {
-  properties: {
-    [key in keyof T]: Property;
-  };
+  properties: Properties<T>;
   required?: (keyof T)[];
 };
+
+export type IdParamSchema = {
+  id: string;
+};
+
+export type ParamsSchema<T> = {
+  properties: Properties<T>;
+};
+
+export type Properties<T> = {
+  [key in keyof T]: Property;
+};
+
 export type Property = {
   type:
     | "string"
