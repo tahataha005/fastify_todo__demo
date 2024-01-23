@@ -31,5 +31,11 @@ export const todoRoutes: RouteGroup = (app, options, done) => {
     preHandler: [authMiddleware],
   });
 
+  app.delete("/:id", {
+    schema: IdParam,
+    handler: deleteTodo,
+    preHandler: [authMiddleware],
+  });
+
   done();
 };
