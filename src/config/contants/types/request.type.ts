@@ -9,6 +9,7 @@ export type IdParamSchema = {
 
 export type ParamsSchema<T> = {
   properties: Properties<T>;
+  type: "object";
 };
 
 export type Properties<T> = {
