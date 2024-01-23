@@ -1,13 +1,15 @@
 import dotenv from "dotenv";
 import app from "./app";
-import { registerRouteGroup } from "./config/utils/routes/route";
-import { authRoutes } from "./features/auth";
+import { registerRouteGroup } from "@config/utils/routes/route";
+import { authRoutes } from "@features/auth";
+import { todoRoutes } from "@features/todo";
 
 dotenv.config({
   path: ".env",
 });
 
 registerRouteGroup("/auth", authRoutes);
+registerRouteGroup("/todo", todoRoutes);
 
 app.listen(
   {
