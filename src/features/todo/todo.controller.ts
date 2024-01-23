@@ -83,3 +83,22 @@ export const updateTodo: ControllerMethod = async (request, reply) => {
 
   return reply.send(todo);
 };
+
+export const deleteTodo: ControllerMethod = async (request, reply) => {
+  const { id } = request.params as IdParamSchema;
+  const { user } = request;
+
+  const todo = await Todo.delete({
+    where: {
+      id: parseFloat(id),
+      userId: user!.id,
+    },
+  });
+
+  throwNotFound({
+    entity: "Todo",
+    reply,
+  });
+
+  return reply.send(todo);
+};
