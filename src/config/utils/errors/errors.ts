@@ -21,8 +21,8 @@ export const throwInternalError = (
   return reply.status(INTERNAL_SERVER_ERROR).send({ message });
 };
 
-export const throwNotFound = (data: NotFoundParams, reply: FastifyReply) => {
-  const { message, entity, errorCheck } = data;
+export const throwNotFound = (data: NotFoundParams) => {
+  const { message, entity, errorCheck, reply } = data;
 
   if (errorCheck ?? true) {
     const entityString: string = entity !== null ? `${entity} ` : "";
@@ -33,11 +33,8 @@ export const throwNotFound = (data: NotFoundParams, reply: FastifyReply) => {
   }
 };
 
-export const throwUnauthorized = (
-  data: BaseErrorParams,
-  reply: FastifyReply
-) => {
-  const { message, errorCheck } = data;
+export const throwUnauthorized = (data: BaseErrorParams) => {
+  const { message, errorCheck, reply } = data;
 
   if (errorCheck ?? true) {
     reply.status(UNAUTHORIZED).send({
@@ -46,8 +43,8 @@ export const throwUnauthorized = (
   }
 };
 
-export const throwForbidden = (data: ForbiddenParams, reply: FastifyReply) => {
-  const { message, action, errorCheck } = data;
+export const throwForbidden = (data: ForbiddenParams) => {
+  const { message, action, errorCheck, reply } = data;
 
   if (errorCheck ?? true) {
     const actionString: string = action !== null ? `${action} ` : "";
@@ -58,8 +55,8 @@ export const throwForbidden = (data: ForbiddenParams, reply: FastifyReply) => {
   }
 };
 
-export const throwBadRequest = (data: BaseErrorParams, reply: FastifyReply) => {
-  const { message, errorCheck } = data;
+export const throwBadRequest = (data: BaseErrorParams) => {
+  const { message, errorCheck, reply } = data;
 
   if (errorCheck ?? true) {
     reply.status(BAD_REQUEST).send({
