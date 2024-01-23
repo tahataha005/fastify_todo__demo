@@ -1,18 +1,23 @@
 import { RouteGroup } from "@config/contants/types/route.types";
-import { getTodo } from "./todo.controller";
+import { createTodo, getTodo } from "./todo.controller";
 import { authMiddleware } from "@config/settings/middlewares/auth.middleware";
+import {
+  IdParam,
+  bodySchemaBuilder,
+  paramsSchemaBuilder,
+} from "@config/utils/requests/request";
+import { CreateTodoDto, createTodoSchema } from "./schemas/create.todo.dto";
 
 export const todoRoutes: RouteGroup = (app, options, done) => {
   app.get("/:id", {
-    schema: {
-      params: {
-        type: "object",
-        properties: {
-          id: { type: "string" },
-        },
-      },
-    },
+    schema: IdParam,
     handler: getTodo,
+    preHandler: [authMiddleware],
+  });
+
+  app.post("/", {
+    schema: bodySchemaBuilder<CreateTodoDto>(createTodoSchema),
+    handler: createTodo,
     preHandler: [authMiddleware],
   });
 
