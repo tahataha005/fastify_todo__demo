@@ -28,5 +28,6 @@ export const IdParam: { params: ParamsSchema<IdParamSchema> } = {
     properties: {
       id: { type: "string" },
     },
+    type: OBJECT,
   },
 };
