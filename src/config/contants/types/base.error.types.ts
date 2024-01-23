@@ -1,6 +1,9 @@
+import { FastifyReply } from "fastify";
+
 export interface BaseErrorParams {
   message?: string;
   errorCheck?: boolean;
+  reply: FastifyReply;
 }
 
 export interface NotFoundParams extends BaseErrorParams {
