@@ -1,10 +1,8 @@
+import { User } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
-import {
-  FastifyReplyType,
-  FastifyRequestType,
-} from "fastify/types/type-provider";
+import {} from "fastify/types/type-provider";
 
 export type ControllerMethod = (
-  request: FastifyRequest,
+  request: FastifyRequest & { user?: User | null },
   reply: FastifyReply
 ) => Promise<FastifyReply | void>;
