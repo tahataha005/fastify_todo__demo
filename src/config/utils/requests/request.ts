@@ -1,4 +1,8 @@
-import { BodySchema } from "@config/contants/types/request.type";
+import {
+  BodySchema,
+  IdParamSchema,
+  ParamsSchema,
+} from "@config/contants/types/request.type";
 import { OBJECT } from "@config/contants/variables/contants.variables";
 
 export const bodySchemaBuilder = <T>(schema: BodySchema<T>) => {
@@ -10,6 +14,19 @@ export const bodySchemaBuilder = <T>(schema: BodySchema<T>) => {
   };
 };
 
-export type IdParam = {
-  id: string;
+export const paramsSchemaBuilder = <T>(schema: ParamsSchema<T>) => {
+  return {
+    params: {
+      ...schema,
+      type: OBJECT,
+    },
+  };
+};
+
+export const IdParam: { params: ParamsSchema<IdParamSchema> } = {
+  params: {
+    properties: {
+      id: { type: "string" },
+    },
+  },
 };
