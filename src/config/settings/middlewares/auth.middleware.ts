@@ -1,8 +1,7 @@
 import { ControllerMethod } from "@config/contants/types/controller.type";
 import { throwUnauthorized } from "@config/utils/errors/errors";
 import jwt from "jsonwebtoken";
-import User from "@features/auth/models/user.model";
-import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
+import User from "@features/auth";
 import { MiddlewareMethod } from "@config/contants/types/middleware.type";
 
 type CustomPayload = {

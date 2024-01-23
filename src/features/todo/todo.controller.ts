@@ -1,7 +1,7 @@
 import { ControllerMethod } from "@config/contants/types/controller.type";
 import { IdParam } from "@config/utils/requests/request";
-import Todo from "./models/todo.model";
 import { throwNotFound } from "@config/utils/errors/errors";
+import Todo from "@features/todo";
 
 export const getTodo: ControllerMethod = async (request, reply) => {
   const { id } = request.params as IdParam;
