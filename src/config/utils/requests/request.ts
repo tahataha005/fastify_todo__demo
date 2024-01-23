@@ -9,3 +9,7 @@ export const bodySchemaBuilder = <T>(schema: BodySchema<T>) => {
     },
   };
 };
+
+export type IdParam = {
+  id: string;
+};
