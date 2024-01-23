@@ -1,9 +1,10 @@
-import { ControllerMethod } from "../../config/contants/types/controller.type";
-import User from "./models/user.model";
-import { LoginDto } from "./schemas/login.req.schema";
-import { RegisterDto } from "./schemas/register.req";
+import { ControllerMethod } from "@config/contants/types/controller.type";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import User from "@features/auth";
+
+import { LoginDto } from "./schemas/login.req.schema";
+import { RegisterDto } from "./schemas/register.req";
 import { throwBadRequest } from "@config/utils/errors/errors";
 
 export const login: ControllerMethod = async (request, reply) => {
