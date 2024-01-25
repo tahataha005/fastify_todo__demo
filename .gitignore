@@ -6,7 +6,7 @@ enviroments
 *.env
 
 # Build folder
-build
+# build
 
 # Database migrations
 prisma/migrations
