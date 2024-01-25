@@ -1,4 +1,4 @@
-import client from "@config/settings/database/database";
+import client from "../../../config/settings/database/database";
 
 const Todo = client.todo;
 

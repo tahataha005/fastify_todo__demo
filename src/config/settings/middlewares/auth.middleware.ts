@@ -1,8 +1,7 @@
-import { ControllerMethod } from "@config/contants/types/controller.type";
-import { throwUnauthorized } from "@config/utils/errors/errors";
+import { throwUnauthorized } from "../../../config/utils/errors/errors";
 import jwt from "jsonwebtoken";
-import User from "@features/auth";
-import { MiddlewareMethod } from "@config/contants/types/middleware.type";
+import User from "../../../features/auth";
+import { MiddlewareMethod } from "../../../config/contants/types/middleware.type";
 
 type CustomPayload = {
   id: number;

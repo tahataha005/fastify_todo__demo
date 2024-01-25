@@ -1,4 +1,4 @@
-import UserModel from "@features/auth";
+import UserModel from "../../features/auth";
 import { User } from "@prisma/client";
 import Todo from "./models/todo.model";
 

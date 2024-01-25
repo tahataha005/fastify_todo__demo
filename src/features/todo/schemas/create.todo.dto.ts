@@ -1,4 +1,4 @@
-import { BodySchema } from "@config/contants/types/request.type";
+import { BodySchema } from "../../../config/contants/types/request.type";
 
 export type CreateTodoDto = {
   title: string;

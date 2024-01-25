@@ -1,7 +1,7 @@
-import { ControllerMethod } from "@config/contants/types/controller.type";
-import { IdParamSchema } from "@config/contants/types/request.type";
-import { throwNotFound } from "@config/utils/errors/errors";
-import Todo from "@features/todo";
+import { ControllerMethod } from "../../config/contants/types/controller.type";
+import { IdParamSchema } from "../../config/contants/types/request.type";
+import { throwNotFound } from "../../config/utils/errors/errors";
+import Todo from "../../features/todo";
 import { CreateTodoDto } from "./schemas/create.todo.dto";
 import { UpdateTodoDto } from "./schemas/update.todo.dto";
 import { calculateScoreIfUpdated } from "./todo.service";

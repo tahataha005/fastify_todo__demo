@@ -4,12 +4,12 @@ import {
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   UNAUTHORIZED,
-} from "@config/contants/variables/errors.variables";
+} from "../../../config/contants/variables/errors.variables";
 import {
   BaseErrorParams,
   ForbiddenParams,
   NotFoundParams,
-} from "@config/contants/types/base.error.types";
+} from "../../../config/contants/types/base.error.types";
 import { FastifyReply } from "fastify";
 
 export const throwInternalError = (

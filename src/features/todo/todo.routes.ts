@@ -1,11 +1,11 @@
-import { RouteGroup } from "@config/contants/types/route.types";
+import { RouteGroup } from "../../config/contants/types/route.types";
 import { createTodo, deleteTodo, updateTodo, getTodo } from "./todo.controller";
-import { authMiddleware } from "@config/settings/middlewares/auth.middleware";
+import { authMiddleware } from "../../config/settings/middlewares/auth.middleware";
 import {
   IdParam,
   bodySchemaBuilder,
   paramsSchemaBuilder,
-} from "@config/utils/requests/request";
+} from "../../config/utils/requests/request";
 import { CreateTodoDto, createTodoSchema } from "./schemas/create.todo.dto";
 import { UpdateTodoDto, updateTodoSchema } from "./schemas/update.todo.dto";
 
