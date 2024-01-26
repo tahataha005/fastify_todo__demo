@@ -7,3 +7,5 @@ export type RouteGroup = (
 ) => void;
 
 type DoneFunction = (err?: Error) => void;
+
+export type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";

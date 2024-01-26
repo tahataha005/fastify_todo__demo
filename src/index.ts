@@ -3,6 +3,7 @@ import app from "./app";
 import { registerRouteGroup } from "./config/utils/routes/route";
 import { authRoutes } from "./features/auth";
 import { todoRoutes } from "./features/todo";
+import { welcomeRoute } from "./config/contants/variables/welcome.route";
 
 dotenv.config({
   path: ".env",
@@ -10,6 +11,10 @@ dotenv.config({
 
 registerRouteGroup("/auth", authRoutes);
 registerRouteGroup("/todo", todoRoutes);
+
+app.route({
+  ...welcomeRoute,
+});
 
 app.listen(
   {
