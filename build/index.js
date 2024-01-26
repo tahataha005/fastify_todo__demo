@@ -9,7 +9,7 @@ const route_1 = require("./config/utils/routes/route");
 const auth_1 = require("./features/auth");
 const todo_1 = require("./features/todo");
 const welcome_route_1 = require("./config/contants/variables/welcome.route");
-const schedule_1 = require("@features/schedule");
+const schedule_1 = require("./features/schedule");
 dotenv_1.default.config({
     path: ".env",
 });

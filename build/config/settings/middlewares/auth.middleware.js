@@ -42,6 +42,10 @@ const authMiddleware = (request, reply, done) => __awaiter(void 0, void 0, void 
             where: {
                 id: decoded.id,
             },
+            include: {
+                todos: true,
+                schedules: true,
+            },
         });
         (0, errors_1.throwUnauthorized)({
             reply,
