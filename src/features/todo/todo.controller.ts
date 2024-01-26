@@ -14,6 +14,7 @@ export const getTodo: ControllerMethod = async (request, reply) => {
     const todo = await Todo.findUnique({ where: { id: parseFloat(id) } });
 
     throwNotFound({
+      errorCheck: !todo,
       entity: "Todo",
       reply,
     });

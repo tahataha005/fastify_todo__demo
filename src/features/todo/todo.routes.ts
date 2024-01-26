@@ -10,7 +10,7 @@ import { CreateTodoDto, createTodoSchema } from "./schemas/create.todo.dto";
 import { UpdateTodoDto, updateTodoSchema } from "./schemas/update.todo.dto";
 
 export const todoRoutes: RouteGroup = (app, options, done) => {
-  app.get("/:id", {
+  app.get("/:id?", {
     schema: IdParam,
     handler: getTodo,
     preHandler: [authMiddleware],

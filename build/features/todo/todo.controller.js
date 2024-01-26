@@ -22,6 +22,7 @@ const getTodo = (request, reply) => __awaiter(void 0, void 0, void 0, function* 
     if (id) {
         const todo = yield todo_1.default.findUnique({ where: { id: parseFloat(id) } });
         (0, errors_1.throwNotFound)({
+            errorCheck: !todo,
             entity: "Todo",
             reply,
         });
