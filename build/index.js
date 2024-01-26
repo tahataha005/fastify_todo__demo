@@ -9,11 +9,13 @@ const route_1 = require("./config/utils/routes/route");
 const auth_1 = require("./features/auth");
 const todo_1 = require("./features/todo");
 const welcome_route_1 = require("./config/contants/variables/welcome.route");
+const schedule_1 = require("@features/schedule");
 dotenv_1.default.config({
     path: ".env",
 });
 (0, route_1.registerRouteGroup)("/auth", auth_1.authRoutes);
 (0, route_1.registerRouteGroup)("/todo", todo_1.todoRoutes);
+(0, route_1.registerRouteGroup)("/schedule", schedule_1.scheduleRoutes);
 app_1.default.route(Object.assign({}, welcome_route_1.welcomeRoute));
 app_1.default.listen({
     port: parseInt(process.env.SERVER_PORT),

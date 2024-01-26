@@ -19,6 +19,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   todos     Todo[]
+  schedules Schedule[]
 }
 
 model Todo {
@@ -28,6 +29,16 @@ model Todo {
   description String
   score     Int
   time      DateTime
+  schedule  Schedule? @relation(fields:[scheduleId] , references: [id])
+  scheduleId Int?
+  user      User     @relation(fields:[userId] , references: [id])
+  userId    Int
+}
+
+model Schedule {
+  id        Int      @id @default(autoincrement())
+  day      DateTime
+  todos    Todo[]
   user      User     @relation(fields:[userId] , references: [id])
   userId    Int
 }
