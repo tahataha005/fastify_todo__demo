@@ -4,6 +4,7 @@ import { registerRouteGroup } from "./config/utils/routes/route";
 import { authRoutes } from "./features/auth";
 import { todoRoutes } from "./features/todo";
 import { welcomeRoute } from "./config/contants/variables/welcome.route";
+import { scheduleRoutes } from "@features/schedule";
 
 dotenv.config({
   path: ".env",
@@ -11,6 +12,7 @@ dotenv.config({
 
 registerRouteGroup("/auth", authRoutes);
 registerRouteGroup("/todo", todoRoutes);
+registerRouteGroup("/schedule", scheduleRoutes);
 
 app.route({
   ...welcomeRoute,
