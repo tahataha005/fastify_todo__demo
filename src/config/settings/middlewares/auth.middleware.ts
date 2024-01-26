@@ -46,6 +46,10 @@ export const authMiddleware: MiddlewareMethod = async (
       where: {
         id: decoded.id,
       },
+      include: {
+        todos: true,
+        schedules: true,
+      },
     });
 
     throwUnauthorized({
