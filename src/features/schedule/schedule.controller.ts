@@ -3,6 +3,7 @@ import { IdParamSchema } from "../../config/contants/types/request.type";
 import { throwNotFound } from "../../config/utils/errors/errors";
 import Schedule from "./models/schedule.model";
 import { CreateScheduleDto } from "./schemas/create.schedule.dto";
+import { UpdateScheduleDto } from "./schemas/update.schedule.dto";
 
 export const getSchedules: ControllerMethod = async (request, reply) => {
   const { id } = request.params as IdParamSchema;
@@ -43,3 +44,28 @@ export const createSchedule: ControllerMethod = async (request, reply) => {
 
   return reply.send(schedule);
 };
+
+export const updateSchedule: ControllerMethod = async (request, reply) => {
+  const {day,todos} = request.body as UpdateScheduleDto;
+  const { id } = request.params as IdParamSchema;
+  const { user } = request;
+
+  const schedule = await Schedule.update({
+    where: { id: parseFloat(id) },
+    data: {
+      day,
+      todos: {
+        connect: todos.map((todo) => ({ id: todo })),
+      },
+      userId: user!.id,
+    },
+  });
+
+  throwNotFound({
+    reply,
+    entity:"Schedule",
+    errorCheck: schedule === null
+  })
+
+  return reply.send(schedule);
+}
