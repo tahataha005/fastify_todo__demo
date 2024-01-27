@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSchedules = void 0;
+exports.createSchedule = exports.getSchedules = void 0;
 const errors_1 = require("../../config/utils/errors/errors");
+const schedule_model_1 = __importDefault(require("./models/schedule.model"));
 const getSchedules = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = request.params;
     const { user } = request;
@@ -29,3 +33,18 @@ const getSchedules = (request, reply) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.getSchedules = getSchedules;
+const createSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
+    const { day, todos } = request.body;
+    const { user } = request;
+    const schedule = yield schedule_model_1.default.create({
+        data: {
+            day,
+            todos: {
+                connect: todos.map((todo) => ({ id: todo })),
+            },
+            userId: user.id,
+        },
+    });
+    return reply.send(schedule);
+});
+exports.createSchedule = createSchedule;

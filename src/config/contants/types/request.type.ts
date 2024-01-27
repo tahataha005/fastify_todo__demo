@@ -29,4 +29,5 @@ export type Property = {
   minLength?: number;
   maxLength?: number;
   pattern?: string;
+  items?: Property;
 };
