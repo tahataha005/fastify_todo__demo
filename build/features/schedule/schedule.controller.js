@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createSchedule = exports.getSchedules = void 0;
+exports.updateSchedule = exports.createSchedule = exports.getSchedules = void 0;
 const errors_1 = require("../../config/utils/errors/errors");
 const schedule_model_1 = __importDefault(require("./models/schedule.model"));
 const getSchedules = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,3 +48,25 @@ const createSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, fun
     return reply.send(schedule);
 });
 exports.createSchedule = createSchedule;
+const updateSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
+    const { day, todos } = request.body;
+    const { id } = request.params;
+    const { user } = request;
+    const schedule = yield schedule_model_1.default.update({
+        where: { id: parseFloat(id) },
+        data: {
+            day,
+            todos: {
+                connect: todos.map((todo) => ({ id: todo })),
+            },
+            userId: user.id,
+        },
+    });
+    (0, errors_1.throwNotFound)({
+        reply,
+        entity: "Schedule",
+        errorCheck: schedule === null
+    });
+    return reply.send(schedule);
+});
+exports.updateSchedule = updateSchedule;
