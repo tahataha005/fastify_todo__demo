@@ -1,27 +1,34 @@
 import UserModel from "../../features/auth";
-import { User } from "@prisma/client";
-import Todo from "./models/todo.model";
+import { Todo, User } from "@prisma/client";
+import TodoModel from "./models/todo.model";
 
-export const calculateScoreIfUpdated = async (user: User) => {
-  const todos = await Todo.findMany({
-    where: {
-      userId: user.id,
-    },
-  });
+export const recalculateScoreChecker = async (
+  todo: Todo,
+  user: User,
+  score: number | undefined,
+  completed: boolean | undefined
+) => {
+  if (todo.score !== score || todo.completed !== completed) {
+    const todos = await TodoModel.findMany({
+      where: {
+        userId: user.id,
+      },
+    });
 
-  const score = todos.reduce((acc, todo) => {
-    if (todo.completed) {
-      return acc + todo.score;
-    }
-    return acc;
-  }, 0);
+    const score = todos.reduce((acc, todo) => {
+      if (todo.completed) {
+        return acc + todo.score;
+      }
+      return acc;
+    }, 0);
 
-  await UserModel.update({
-    where: {
-      id: user.id,
-    },
-    data: {
-      score: score,
-    },
-  });
+    await UserModel.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        score: score,
+      },
+    });
+  }
 };

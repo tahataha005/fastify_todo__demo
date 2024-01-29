@@ -4,7 +4,7 @@ import { throwNotFound } from "../../config/utils/errors/errors";
 import Todo from "../../features/todo";
 import { CreateTodoDto } from "./schemas/create.todo.dto";
 import { UpdateTodoDto } from "./schemas/update.todo.dto";
-import { calculateScoreIfUpdated } from "./todo.service";
+import { recalculateScoreChecker } from "./todo.service";
 
 export const getTodo: ControllerMethod = async (request, reply) => {
   const { id } = request.params as IdParamSchema;
@@ -28,7 +28,8 @@ export const getTodo: ControllerMethod = async (request, reply) => {
 
 export const createTodo: ControllerMethod = async (request, reply) => {
   const { user } = request;
-  const { title, description, time, score } = request.body as CreateTodoDto;
+  const { title, description, time, score, scheduleId } =
+    request.body as CreateTodoDto;
 
   const todo = await Todo.create({
     data: {
@@ -36,6 +37,7 @@ export const createTodo: ControllerMethod = async (request, reply) => {
       description,
       time,
       score,
+      scheduleId,
       completed: false,
       userId: user!.id,
     },
@@ -47,7 +49,7 @@ export const createTodo: ControllerMethod = async (request, reply) => {
 export const updateTodo: ControllerMethod = async (request, reply) => {
   const { id } = request.params as IdParamSchema;
   const { user } = request;
-  const { title, description, time, score, completed } =
+  const { title, description, time, score, completed, scheduleId } =
     request.body as UpdateTodoDto;
 
   const old = await Todo.findUnique({
@@ -73,12 +75,11 @@ export const updateTodo: ControllerMethod = async (request, reply) => {
       time,
       score,
       completed,
+      scheduleId,
     },
   });
 
-  if (old!.score !== score || old!.completed !== completed) {
-    await calculateScoreIfUpdated(user!);
-  }
+  await recalculateScoreChecker(old!, user!, score, completed);
 
   return reply.send(todo);
 };
