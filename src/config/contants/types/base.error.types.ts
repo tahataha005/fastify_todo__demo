@@ -1,5 +1,3 @@
-import { FastifyReply } from "fastify";
-
 export interface BaseErrorParams {
   message?: string;
   errorCheck?: boolean;
