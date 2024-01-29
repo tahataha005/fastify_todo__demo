@@ -4,38 +4,38 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.ts",
+    "start": "node src/index.ts",
+    "dev": "nodemon src/index.ts",
     "build": "rimraf build && tsc",
     "postinstall": "prisma generate",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "dotenv -e src/config/settings/enviroments/.env -- npx prisma migrate dev",
+    "migrate:dev": "dotenv -e src/config/settings/enviroments/.env.development -- npx prisma migrate dev",
+    "apply": "npm run ts.check && npm run build && npm run add-build && git commit -m \"build\" && git push"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/sensible": "^5.5.0",
     "@prisma/client": "^5.8.1",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.11.5",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
     "fastify": "^4.25.2",
     "jsonwebtoken": "^9.0.2",
     "prisma": "5.8.1"
   },
   "devDependencies": {
+    "dotenv": "^16.4.1",
     "nodemon": "^3.0.3",
     "pre-commit": "^1.2.2",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0"
-  },
-  "pre-commit": [
-    "ts.check",
-    "build",
-    "add-build"
-  ]
+  }
 }
