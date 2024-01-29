@@ -4,14 +4,22 @@ import {
   bodySchemaBuilder,
   paramsSchemaBuilder,
 } from "../../config/utils/requests/request";
-import { createSchedule, getSchedules, updateSchedule } from "./schedule.controller";
+import {
+  createSchedule,
+  deleteSchedule,
+  getSchedules,
+  updateSchedule,
+} from "./schedule.controller";
 import { authMiddleware } from "../../config/settings/middlewares/auth.middleware";
 import {
   CreateScheduleDto,
   createScheduleSchema,
 } from "./schemas/create.schedule.dto";
-import { IdParamSchema } from '@config/contants/types/request.type';
-import { UpdateScheduleDto, updateScheduleSchema } from './schemas/update.schedule.dto';
+import { IdParamSchema } from "@config/contants/types/request.type";
+import {
+  UpdateScheduleDto,
+  updateScheduleSchema,
+} from "./schemas/update.schedule.dto";
 
 export const scheduleRoutes: RouteGroup = (app, options, done) => {
   app.get("/:id?", {
@@ -30,9 +38,14 @@ export const scheduleRoutes: RouteGroup = (app, options, done) => {
     schema: {
       ...paramsSchemaBuilder<IdParamSchema>(IdParam.params),
       ...bodySchemaBuilder<UpdateScheduleDto>(updateScheduleSchema),
-
     },
     handler: updateSchedule,
+    preHandler: [authMiddleware],
+  });
+
+  app.delete("/:id", {
+    schema: IdParam,
+    handler: deleteSchedule,
     preHandler: [authMiddleware],
   });
 
