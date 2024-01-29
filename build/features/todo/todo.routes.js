@@ -6,27 +6,21 @@ const auth_middleware_1 = require("../../config/settings/middlewares/auth.middle
 const request_1 = require("../../config/utils/requests/request");
 const create_todo_dto_1 = require("./schemas/create.todo.dto");
 const update_todo_dto_1 = require("./schemas/update.todo.dto");
+const route_1 = require("../../config/utils/routes/route");
 const todoRoutes = (app, options, done) => {
-    app.get("/:id?", {
-        schema: request_1.IdParam,
-        handler: todo_controller_1.getTodo,
-        preHandler: [auth_middleware_1.authMiddleware],
-    });
-    app.post("/", {
-        schema: (0, request_1.bodySchemaBuilder)(create_todo_dto_1.createTodoSchema),
-        handler: todo_controller_1.createTodo,
-        preHandler: [auth_middleware_1.authMiddleware],
-    });
-    app.put("/:id", {
-        schema: Object.assign(Object.assign({}, (0, request_1.paramsSchemaBuilder)(request_1.IdParam.params)), (0, request_1.bodySchemaBuilder)(update_todo_dto_1.updateTodoSchema)),
-        handler: todo_controller_1.updateTodo,
-        preHandler: [auth_middleware_1.authMiddleware],
-    });
-    app.delete("/:id", {
-        schema: request_1.IdParam,
-        handler: todo_controller_1.deleteTodo,
-        preHandler: [auth_middleware_1.authMiddleware],
-    });
+    app.get("/:id?", (0, route_1.routeHandler)(todo_controller_1.getTodo, { params: request_1.IdParam }, [
+        auth_middleware_1.authMiddleware,
+    ]));
+    app.post("/", (0, route_1.routeHandler)(todo_controller_1.createTodo, { body: create_todo_dto_1.createTodoSchema }, [
+        auth_middleware_1.authMiddleware,
+    ]));
+    app.put("/:id", (0, route_1.routeHandler)(todo_controller_1.updateTodo, {
+        params: request_1.IdParam,
+        body: update_todo_dto_1.updateTodoSchema,
+    }, [auth_middleware_1.authMiddleware]));
+    app.delete("/:id", (0, route_1.routeHandler)(todo_controller_1.deleteTodo, { params: request_1.IdParam }, [
+        auth_middleware_1.authMiddleware,
+    ]));
     done();
 };
 exports.todoRoutes = todoRoutes;

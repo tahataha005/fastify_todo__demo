@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteSchedule = exports.updateSchedule = exports.createSchedule = exports.getSchedules = void 0;
 const errors_1 = require("../../config/utils/errors/errors");
 const schedule_model_1 = __importDefault(require("./models/schedule.model"));
+const schedule_service_1 = require("./schedule.service");
 const getSchedules = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = request.params;
     const { user } = request;
@@ -40,18 +41,12 @@ const createSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, fun
         where: { userId: user.id },
         include: { todos: true },
     });
-    const dayCheck = schedules.some((schedule) => {
-        const current = new Date(schedule.day);
-        return (current.getDay() === parsed.getDay() &&
-            current.getFullYear() === parsed.getFullYear() &&
-            parsed.getMonth() === parsed.getMonth());
-    });
+    const dayCheck = (0, schedule_service_1.checkUniqueDay)(schedules, parsed);
     (0, errors_1.throwBadRequest)({
         message: "Schedule on provided day already exists",
         errorCheck: dayCheck,
     });
-    const todoIds = new Set(todos);
-    const todoCheck = schedules.some((schedule) => schedule.todos.some((todo) => todoIds.has(todo.id)));
+    const todoCheck = (0, schedule_service_1.checkUniqueTodos)(schedules, todos);
     (0, errors_1.throwBadRequest)({
         message: "Some todos are already in another schedule",
         errorCheck: todoCheck,
@@ -72,21 +67,27 @@ const createSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, fun
 });
 exports.createSchedule = createSchedule;
 const updateSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
-    const { day, todos } = request.body;
+    const { day, todos, toDelete } = request.body;
     const { id } = request.params;
     const { user } = request;
     if (day) {
         const parsed = new Date(day);
         const schedules = yield schedule_model_1.default.findMany({ where: { userId: user.id } });
-        const check = schedules.some((schedule) => {
-            const current = new Date(schedule.day);
-            return (current.getDay() === parsed.getDay() &&
-                current.getFullYear() === parsed.getFullYear() &&
-                parsed.getMonth() === parsed.getMonth());
-        });
+        const dayCheck = (0, schedule_service_1.checkUniqueDay)(schedules, parsed);
         (0, errors_1.throwBadRequest)({
             message: "Schedule on provided day already exists",
-            errorCheck: check,
+            errorCheck: dayCheck,
+        });
+    }
+    if (todos) {
+        const schedules = yield schedule_model_1.default.findMany({
+            where: { userId: user.id },
+            include: { todos: true },
+        });
+        const todoCheck = (0, schedule_service_1.checkUniqueTodos)(schedules, todos);
+        (0, errors_1.throwBadRequest)({
+            message: "Some todos are already in another schedule",
+            errorCheck: todoCheck,
         });
     }
     const schedule = yield schedule_model_1.default.update({
@@ -95,6 +96,7 @@ const updateSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, fun
             day,
             todos: {
                 connect: todos.map((todo) => ({ id: todo })),
+                disconnect: toDelete === null || toDelete === void 0 ? void 0 : toDelete.map((todo) => ({ id: todo })),
             },
             userId: user.id,
         },

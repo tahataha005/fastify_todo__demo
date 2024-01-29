@@ -6,27 +6,19 @@ const schedule_controller_1 = require("./schedule.controller");
 const auth_middleware_1 = require("../../config/settings/middlewares/auth.middleware");
 const create_schedule_dto_1 = require("./schemas/create.schedule.dto");
 const update_schedule_dto_1 = require("./schemas/update.schedule.dto");
+const route_1 = require("../../config/utils/routes/route");
 const scheduleRoutes = (app, options, done) => {
-    app.get("/:id?", {
-        schema: request_1.IdParam,
-        handler: schedule_controller_1.getSchedules,
-        preHandler: [auth_middleware_1.authMiddleware],
-    });
-    app.post("/", {
-        schema: (0, request_1.bodySchemaBuilder)(create_schedule_dto_1.createScheduleSchema),
-        handler: schedule_controller_1.createSchedule,
-        preHandler: [auth_middleware_1.authMiddleware],
-    });
-    app.put("/:id", {
-        schema: Object.assign(Object.assign({}, (0, request_1.paramsSchemaBuilder)(request_1.IdParam.params)), (0, request_1.bodySchemaBuilder)(update_schedule_dto_1.updateScheduleSchema)),
-        handler: schedule_controller_1.updateSchedule,
-        preHandler: [auth_middleware_1.authMiddleware],
-    });
-    app.delete("/:id", {
-        schema: request_1.IdParam,
-        handler: schedule_controller_1.deleteSchedule,
-        preHandler: [auth_middleware_1.authMiddleware],
-    });
+    app.get("/:id?", (0, route_1.routeHandler)(schedule_controller_1.getSchedules, { params: request_1.IdParam }, [
+        auth_middleware_1.authMiddleware,
+    ]));
+    app.post("/", (0, route_1.routeHandler)(schedule_controller_1.createSchedule, { body: create_schedule_dto_1.createScheduleSchema }, [auth_middleware_1.authMiddleware]));
+    app.put("/:id", (0, route_1.routeHandler)(schedule_controller_1.updateSchedule, {
+        params: request_1.IdParam,
+        body: update_schedule_dto_1.updateScheduleSchema,
+    }, [auth_middleware_1.authMiddleware]));
+    app.delete("/:id", (0, route_1.routeHandler)(schedule_controller_1.deleteSchedule, { params: request_1.IdParam }, [
+        auth_middleware_1.authMiddleware,
+    ]));
     done();
 };
 exports.scheduleRoutes = scheduleRoutes;

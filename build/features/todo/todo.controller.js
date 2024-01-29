@@ -35,13 +35,14 @@ const getTodo = (request, reply) => __awaiter(void 0, void 0, void 0, function* 
 exports.getTodo = getTodo;
 const createTodo = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
     const { user } = request;
-    const { title, description, time, score } = request.body;
+    const { title, description, time, score, scheduleId } = request.body;
     const todo = yield todo_1.default.create({
         data: {
             title,
             description,
             time,
             score,
+            scheduleId,
             completed: false,
             userId: user.id,
         },
@@ -52,7 +53,7 @@ exports.createTodo = createTodo;
 const updateTodo = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = request.params;
     const { user } = request;
-    const { title, description, time, score, completed } = request.body;
+    const { title, description, time, score, completed, scheduleId } = request.body;
     const old = yield todo_1.default.findUnique({
         where: {
             id: parseFloat(id),
@@ -74,11 +75,10 @@ const updateTodo = (request, reply) => __awaiter(void 0, void 0, void 0, functio
             time,
             score,
             completed,
+            scheduleId,
         },
     });
-    if (old.score !== score || old.completed !== completed) {
-        yield (0, todo_service_1.calculateScoreIfUpdated)(user);
-    }
+    yield (0, todo_service_1.recalculateScoreChecker)(old, user, score, completed);
     return reply.send(todo);
 });
 exports.updateTodo = updateTodo;

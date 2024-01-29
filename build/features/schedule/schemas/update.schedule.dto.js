@@ -5,6 +5,7 @@ exports.updateScheduleSchema = {
     properties: {
         day: { type: "string" },
         todos: { type: "array", items: { type: "number" } },
+        toDelete: { type: "array", items: { type: "number" } },
     },
     required: [],
 };

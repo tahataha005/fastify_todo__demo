@@ -15,10 +15,8 @@ const paramsSchemaBuilder = (schema) => {
 };
 exports.paramsSchemaBuilder = paramsSchemaBuilder;
 exports.IdParam = {
-    params: {
-        properties: {
-            id: { type: "string" },
-        },
-        type: contants_variables_1.OBJECT,
+    properties: {
+        id: { type: "string" },
     },
+    type: contants_variables_1.OBJECT,
 };

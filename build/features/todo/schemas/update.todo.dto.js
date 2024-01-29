@@ -8,6 +8,7 @@ exports.updateTodoSchema = {
         time: { type: "string" },
         completed: { type: "boolean" },
         score: { type: "number" },
+        scheduleId: { type: "number" },
     },
     required: [],
 };
