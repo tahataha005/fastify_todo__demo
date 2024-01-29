@@ -19,7 +19,6 @@ export const login: ControllerMethod = async (request, reply) => {
   throwBadRequest({
     message: "Invalid credentials",
     errorCheck: !user,
-    reply,
   });
 
   const check = bcrypt.compareSync(sentPassword, user!.password);
@@ -27,7 +26,6 @@ export const login: ControllerMethod = async (request, reply) => {
   throwBadRequest({
     message: "Invalid credentials",
     errorCheck: !check,
-    reply,
   });
 
   const token = jwt.sign(
@@ -35,7 +33,10 @@ export const login: ControllerMethod = async (request, reply) => {
       id: user!.id,
       email: user!.email,
     },
-    process.env.JWT_SECRET!
+    process.env.JWT_SECRET!,
+    {
+      expiresIn: "10 days",
+    }
   );
 
   const { password, ...data } = user!;
@@ -58,7 +59,6 @@ export const register: ControllerMethod = async (request, reply) => {
   throwBadRequest({
     message: "Email already exists",
     errorCheck: check !== null,
-    reply,
   });
 
   const salt = bcrypt.genSaltSync(10);

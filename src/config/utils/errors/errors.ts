@@ -10,57 +10,46 @@ import {
   ForbiddenParams,
   NotFoundParams,
 } from "../../../config/contants/types/base.error.types";
-import { FastifyReply } from "fastify";
+import app from "../../../app";
 
-export const throwInternalError = (
-  data: BaseErrorParams,
-  reply: FastifyReply
-) => {
+export const throwInternalError = (data: BaseErrorParams) => {
   const { message } = data;
 
-  return reply.status(INTERNAL_SERVER_ERROR).send({ message });
+  return app.httpErrors.internalServerError(message);
 };
 
 export const throwNotFound = (data: NotFoundParams) => {
-  const { message, entity, errorCheck, reply } = data;
+  const { message, entity, errorCheck } = data;
 
   if (errorCheck ?? true) {
     const entityString: string = entity !== null ? `${entity} ` : "";
 
-    reply.status(NOT_FOUND).send({
-      message: message ?? `${entityString}Not found`,
-    });
+    throw app.httpErrors.notFound(message ?? `${entityString}Not found`);
   }
 };
 
 export const throwUnauthorized = (data: BaseErrorParams) => {
-  const { message, errorCheck, reply } = data;
+  const { message, errorCheck } = data;
 
   if (errorCheck ?? true) {
-    reply.status(UNAUTHORIZED).send({
-      message: message ?? "Unauthorized",
-    });
+    throw app.httpErrors.unauthorized(message ?? "Unauthorized");
   }
 };
 
 export const throwForbidden = (data: ForbiddenParams) => {
-  const { message, action, errorCheck, reply } = data;
+  const { message, action, errorCheck } = data;
 
   if (errorCheck ?? true) {
     const actionString: string = action !== null ? `${action} ` : "";
 
-    reply.status(FORBIDDEN).send({
-      message: message ?? `Forbidden ${actionString}`,
-    });
+    throw app.httpErrors.forbidden(message ?? `Forbidden ${actionString}`);
   }
 };
 
 export const throwBadRequest = (data: BaseErrorParams) => {
-  const { message, errorCheck, reply } = data;
+  const { message, errorCheck } = data;
 
   if (errorCheck ?? true) {
-    reply.status(BAD_REQUEST).send({
-      message: message ?? "Bad request",
-    });
+    throw app.httpErrors.badRequest(message ?? "Bad request");
   }
 };

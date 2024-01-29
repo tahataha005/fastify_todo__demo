@@ -14,9 +14,8 @@ export const getTodo: ControllerMethod = async (request, reply) => {
     const todo = await Todo.findUnique({ where: { id: parseFloat(id) } });
 
     throwNotFound({
-      errorCheck: !todo,
       entity: "Todo",
-      reply,
+      errorCheck: !todo,
     });
 
     return reply.send(todo);
@@ -59,9 +58,8 @@ export const updateTodo: ControllerMethod = async (request, reply) => {
   });
 
   throwNotFound({
-    errorCheck: !old,
     entity: "Todo",
-    reply,
+    errorCheck: !old,
   });
 
   const todo = await Todo.update({
@@ -98,7 +96,7 @@ export const deleteTodo: ControllerMethod = async (request, reply) => {
 
   throwNotFound({
     entity: "Todo",
-    reply,
+    errorCheck: todo === null,
   });
 
   return reply.send(todo);

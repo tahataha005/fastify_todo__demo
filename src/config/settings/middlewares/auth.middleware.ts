@@ -16,21 +16,18 @@ export const authMiddleware: MiddlewareMethod = async (
   const { authorization } = request.headers;
 
   throwUnauthorized({
-    reply,
     errorCheck: !authorization,
   });
 
   const splitted = authorization!.split(" ");
 
   throwUnauthorized({
-    reply,
     errorCheck: splitted.length !== 2,
   });
 
   const [type, token] = splitted;
 
   throwUnauthorized({
-    reply,
     errorCheck: type !== "Bearer",
   });
 
@@ -38,7 +35,6 @@ export const authMiddleware: MiddlewareMethod = async (
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as CustomPayload;
 
     throwUnauthorized({
-      reply,
       errorCheck: !decoded,
     });
 
@@ -48,21 +44,21 @@ export const authMiddleware: MiddlewareMethod = async (
       },
       include: {
         todos: true,
-        schedules: true,
+        schedules: {
+          include: {
+            todos: true,
+          },
+        },
       },
     });
 
     throwUnauthorized({
-      reply,
       errorCheck: !user,
     });
 
     request.user = user;
-
-    done();
   } catch (error) {
     throwUnauthorized({
-      reply,
       message: "Invalid token",
     });
   }
