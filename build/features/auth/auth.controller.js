@@ -38,18 +38,18 @@ const login = (request, reply) => __awaiter(void 0, void 0, void 0, function* ()
     (0, errors_1.throwBadRequest)({
         message: "Invalid credentials",
         errorCheck: !user,
-        reply,
     });
     const check = bcrypt_1.default.compareSync(sentPassword, user.password);
     (0, errors_1.throwBadRequest)({
         message: "Invalid credentials",
         errorCheck: !check,
-        reply,
     });
     const token = jsonwebtoken_1.default.sign({
         id: user.id,
         email: user.email,
-    }, process.env.JWT_SECRET);
+    }, process.env.JWT_SECRET, {
+        expiresIn: "10 days",
+    });
     const _a = user, { password } = _a, data = __rest(_a, ["password"]);
     return reply.status(200).send({
         token,
@@ -67,7 +67,6 @@ const register = (request, reply) => __awaiter(void 0, void 0, void 0, function*
     (0, errors_1.throwBadRequest)({
         message: "Email already exists",
         errorCheck: check !== null,
-        reply,
     });
     const salt = bcrypt_1.default.genSaltSync(10);
     const hashed = bcrypt_1.default.hashSync(password, salt);

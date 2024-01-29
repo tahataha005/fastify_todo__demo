@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateSchedule = exports.createSchedule = exports.getSchedules = void 0;
+exports.deleteSchedule = exports.updateSchedule = exports.createSchedule = exports.getSchedules = void 0;
 const errors_1 = require("../../config/utils/errors/errors");
 const schedule_model_1 = __importDefault(require("./models/schedule.model"));
 const getSchedules = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
@@ -22,9 +22,8 @@ const getSchedules = (request, reply) => __awaiter(void 0, void 0, void 0, funct
     if (id) {
         const schedule = schedules.find((schedule) => schedule.id === parseFloat(id));
         (0, errors_1.throwNotFound)({
-            errorCheck: !schedule,
             entity: "Schedule",
-            reply,
+            errorCheck: !schedule,
         });
         return reply.send(schedule);
     }
@@ -36,7 +35,31 @@ exports.getSchedules = getSchedules;
 const createSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
     const { day, todos } = request.body;
     const { user } = request;
+    const parsed = new Date(day);
+    const schedules = yield schedule_model_1.default.findMany({
+        where: { userId: user.id },
+        include: { todos: true },
+    });
+    const dayCheck = schedules.some((schedule) => {
+        const current = new Date(schedule.day);
+        return (current.getDay() === parsed.getDay() &&
+            current.getFullYear() === parsed.getFullYear() &&
+            parsed.getMonth() === parsed.getMonth());
+    });
+    (0, errors_1.throwBadRequest)({
+        message: "Schedule on provided day already exists",
+        errorCheck: dayCheck,
+    });
+    const todoIds = new Set(todos);
+    const todoCheck = schedules.some((schedule) => schedule.todos.some((todo) => todoIds.has(todo.id)));
+    (0, errors_1.throwBadRequest)({
+        message: "Some todos are already in another schedule",
+        errorCheck: todoCheck,
+    });
     const schedule = yield schedule_model_1.default.create({
+        include: {
+            todos: true,
+        },
         data: {
             day,
             todos: {
@@ -52,6 +75,20 @@ const updateSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, fun
     const { day, todos } = request.body;
     const { id } = request.params;
     const { user } = request;
+    if (day) {
+        const parsed = new Date(day);
+        const schedules = yield schedule_model_1.default.findMany({ where: { userId: user.id } });
+        const check = schedules.some((schedule) => {
+            const current = new Date(schedule.day);
+            return (current.getDay() === parsed.getDay() &&
+                current.getFullYear() === parsed.getFullYear() &&
+                parsed.getMonth() === parsed.getMonth());
+        });
+        (0, errors_1.throwBadRequest)({
+            message: "Schedule on provided day already exists",
+            errorCheck: check,
+        });
+    }
     const schedule = yield schedule_model_1.default.update({
         where: { id: parseFloat(id) },
         data: {
@@ -63,10 +100,25 @@ const updateSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, fun
         },
     });
     (0, errors_1.throwNotFound)({
-        reply,
+        errorCheck: schedule === null,
         entity: "Schedule",
-        errorCheck: schedule === null
     });
     return reply.send(schedule);
 });
 exports.updateSchedule = updateSchedule;
+const deleteSchedule = (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = request.params;
+    const { user } = request;
+    const schedule = yield schedule_model_1.default.delete({
+        where: {
+            id: parseInt(id),
+            userId: user.id,
+        },
+    });
+    (0, errors_1.throwNotFound)({
+        errorCheck: schedule === null,
+        entity: "Schedule",
+    });
+    return reply.send(schedule);
+});
+exports.deleteSchedule = deleteSchedule;

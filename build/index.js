@@ -11,7 +11,7 @@ const todo_1 = require("./features/todo");
 const welcome_route_1 = require("./config/contants/variables/welcome.route");
 const schedule_1 = require("./features/schedule");
 dotenv_1.default.config({
-    path: ".env",
+    path: "src/config/settings/enviroments/.env.development",
 });
 (0, route_1.registerRouteGroup)("/auth", auth_1.authRoutes);
 (0, route_1.registerRouteGroup)("/todo", todo_1.todoRoutes);

@@ -19,23 +19,19 @@ const auth_1 = __importDefault(require("../../../features/auth"));
 const authMiddleware = (request, reply, done) => __awaiter(void 0, void 0, void 0, function* () {
     const { authorization } = request.headers;
     (0, errors_1.throwUnauthorized)({
-        reply,
         errorCheck: !authorization,
     });
     const splitted = authorization.split(" ");
     (0, errors_1.throwUnauthorized)({
-        reply,
         errorCheck: splitted.length !== 2,
     });
     const [type, token] = splitted;
     (0, errors_1.throwUnauthorized)({
-        reply,
         errorCheck: type !== "Bearer",
     });
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         (0, errors_1.throwUnauthorized)({
-            reply,
             errorCheck: !decoded,
         });
         const user = yield auth_1.default.findUnique({
@@ -44,19 +40,20 @@ const authMiddleware = (request, reply, done) => __awaiter(void 0, void 0, void 
             },
             include: {
                 todos: true,
-                schedules: true,
+                schedules: {
+                    include: {
+                        todos: true,
+                    },
+                },
             },
         });
         (0, errors_1.throwUnauthorized)({
-            reply,
             errorCheck: !user,
         });
         request.user = user;
-        done();
     }
     catch (error) {
         (0, errors_1.throwUnauthorized)({
-            reply,
             message: "Invalid token",
         });
     }

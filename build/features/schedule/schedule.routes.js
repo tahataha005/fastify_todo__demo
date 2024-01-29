@@ -22,6 +22,11 @@ const scheduleRoutes = (app, options, done) => {
         handler: schedule_controller_1.updateSchedule,
         preHandler: [auth_middleware_1.authMiddleware],
     });
+    app.delete("/:id", {
+        schema: request_1.IdParam,
+        handler: schedule_controller_1.deleteSchedule,
+        preHandler: [auth_middleware_1.authMiddleware],
+    });
     done();
 };
 exports.scheduleRoutes = scheduleRoutes;

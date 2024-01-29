@@ -22,9 +22,8 @@ const getTodo = (request, reply) => __awaiter(void 0, void 0, void 0, function* 
     if (id) {
         const todo = yield todo_1.default.findUnique({ where: { id: parseFloat(id) } });
         (0, errors_1.throwNotFound)({
-            errorCheck: !todo,
             entity: "Todo",
-            reply,
+            errorCheck: !todo,
         });
         return reply.send(todo);
     }
@@ -61,9 +60,8 @@ const updateTodo = (request, reply) => __awaiter(void 0, void 0, void 0, functio
         },
     });
     (0, errors_1.throwNotFound)({
-        errorCheck: !old,
         entity: "Todo",
-        reply,
+        errorCheck: !old,
     });
     const todo = yield todo_1.default.update({
         where: {
@@ -95,7 +93,7 @@ const deleteTodo = (request, reply) => __awaiter(void 0, void 0, void 0, functio
     });
     (0, errors_1.throwNotFound)({
         entity: "Todo",
-        reply,
+        errorCheck: todo === null,
     });
     return reply.send(todo);
 });
