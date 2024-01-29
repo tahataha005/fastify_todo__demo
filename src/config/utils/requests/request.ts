@@ -23,11 +23,9 @@ export const paramsSchemaBuilder = <T>(schema: ParamsSchema<T>) => {
   };
 };
 
-export const IdParam: { params: ParamsSchema<IdParamSchema> } = {
-  params: {
-    properties: {
-      id: { type: "string" },
-    },
-    type: OBJECT,
+export const IdParam: ParamsSchema<IdParamSchema> = {
+  properties: {
+    id: { type: "string" },
   },
+  type: OBJECT,
 };
