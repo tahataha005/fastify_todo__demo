@@ -5,6 +5,7 @@ import {
   throwNotFound,
 } from "../../config/utils/errors/errors";
 import Schedule from "./models/schedule.model";
+import { checkUniqueDay, checkUniqueTodos } from "./schedule.service";
 import { CreateScheduleDto } from "./schemas/create.schedule.dto";
 import { UpdateScheduleDto } from "./schemas/update.schedule.dto";
 
@@ -41,26 +42,14 @@ export const createSchedule: ControllerMethod = async (request, reply) => {
     include: { todos: true },
   });
 
-  const dayCheck = schedules.some((schedule) => {
-    const current = new Date(schedule.day);
-
-    return (
-      current.getDay() === parsed.getDay() &&
-      current.getFullYear() === parsed.getFullYear() &&
-      parsed.getMonth() === parsed.getMonth()
-    );
-  });
+  const dayCheck = checkUniqueDay(schedules, parsed);
 
   throwBadRequest({
     message: "Schedule on provided day already exists",
     errorCheck: dayCheck,
   });
 
-  const todoIds = new Set(todos);
-
-  const todoCheck = schedules.some((schedule) =>
-    schedule.todos.some((todo) => todoIds.has(todo.id))
-  );
+  const todoCheck = checkUniqueTodos(schedules, todos);
 
   throwBadRequest({
     message: "Some todos are already in another schedule",
@@ -84,7 +73,7 @@ export const createSchedule: ControllerMethod = async (request, reply) => {
 };
 
 export const updateSchedule: ControllerMethod = async (request, reply) => {
-  const { day, todos } = request.body as UpdateScheduleDto;
+  const { day, todos, toDelete } = request.body as UpdateScheduleDto;
   const { id } = request.params as IdParamSchema;
   const { user } = request;
 
@@ -93,19 +82,25 @@ export const updateSchedule: ControllerMethod = async (request, reply) => {
 
     const schedules = await Schedule.findMany({ where: { userId: user!.id } });
 
-    const check = schedules.some((schedule) => {
-      const current = new Date(schedule.day);
-
-      return (
-        current.getDay() === parsed.getDay() &&
-        current.getFullYear() === parsed.getFullYear() &&
-        parsed.getMonth() === parsed.getMonth()
-      );
-    });
+    const dayCheck = checkUniqueDay(schedules, parsed);
 
     throwBadRequest({
       message: "Schedule on provided day already exists",
-      errorCheck: check,
+      errorCheck: dayCheck,
+    });
+  }
+
+  if (todos) {
+    const schedules = await Schedule.findMany({
+      where: { userId: user!.id },
+      include: { todos: true },
+    });
+
+    const todoCheck = checkUniqueTodos(schedules, todos);
+
+    throwBadRequest({
+      message: "Some todos are already in another schedule",
+      errorCheck: todoCheck,
     });
   }
 
@@ -115,6 +110,7 @@ export const updateSchedule: ControllerMethod = async (request, reply) => {
       day,
       todos: {
         connect: todos.map((todo) => ({ id: todo })),
+        disconnect: toDelete?.map((todo) => ({ id: todo })),
       },
       userId: user!.id,
     },
