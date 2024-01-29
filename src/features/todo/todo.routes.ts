@@ -8,34 +8,42 @@ import {
 } from "../../config/utils/requests/request";
 import { CreateTodoDto, createTodoSchema } from "./schemas/create.todo.dto";
 import { UpdateTodoDto, updateTodoSchema } from "./schemas/update.todo.dto";
+import { routeHandler } from "../../config/utils/routes/route";
+import { IdParamSchema } from "../../config/contants/types/request.type";
 
 export const todoRoutes: RouteGroup = (app, options, done) => {
-  app.get("/:id?", {
-    schema: IdParam,
-    handler: getTodo,
-    preHandler: [authMiddleware],
-  });
+  app.get(
+    "/:id?",
+    routeHandler<{}, IdParamSchema>(getTodo, { params: IdParam }, [
+      authMiddleware,
+    ])
+  );
 
-  app.post("/", {
-    schema: bodySchemaBuilder<CreateTodoDto>(createTodoSchema),
-    handler: createTodo,
-    preHandler: [authMiddleware],
-  });
+  app.post(
+    "/",
+    routeHandler<CreateTodoDto, {}>(createTodo, { body: createTodoSchema }, [
+      authMiddleware,
+    ])
+  );
 
-  app.put("/:id", {
-    schema: {
-      ...paramsSchemaBuilder(IdParam.params),
-      ...bodySchemaBuilder<UpdateTodoDto>(updateTodoSchema),
-    },
-    handler: updateTodo,
-    preHandler: [authMiddleware],
-  });
+  app.put(
+    "/:id",
+    routeHandler<UpdateTodoDto, IdParamSchema>(
+      updateTodo,
+      {
+        params: IdParam,
+        body: updateTodoSchema,
+      },
+      [authMiddleware]
+    )
+  );
 
-  app.delete("/:id", {
-    schema: IdParam,
-    handler: deleteTodo,
-    preHandler: [authMiddleware],
-  });
+  app.delete(
+    "/:id",
+    routeHandler<{}, IdParamSchema>(deleteTodo, { params: IdParam }, [
+      authMiddleware,
+    ])
+  );
 
   done();
 };
