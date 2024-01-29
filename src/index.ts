@@ -7,7 +7,7 @@ import { welcomeRoute } from "./config/contants/variables/welcome.route";
 import { scheduleRoutes } from "./features/schedule";
 
 dotenv.config({
-  path: ".env",
+  path: "src/config/settings/enviroments/.env.development",
 });
 
 registerRouteGroup("/auth", authRoutes);
