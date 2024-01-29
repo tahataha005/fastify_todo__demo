@@ -13,7 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "dotenv -e src/config/settings/enviroments/.env -- npx prisma migrate dev",
     "migrate:dev": "dotenv -e src/config/settings/enviroments/.env.development -- npx prisma migrate dev",
-    "apply": "npm run ts.check && npm run build && npm run add-build && git commit -m \"build\" && git push"
+    "apply": "npm run ts.check && npm run build && npm run add-build && git commit -m \"build\""
   },
   "keywords": [],
   "author": "",
