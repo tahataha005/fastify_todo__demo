@@ -20,34 +20,43 @@ import {
   UpdateScheduleDto,
   updateScheduleSchema,
 } from "./schemas/update.schedule.dto";
+import { routeHandler } from "../../config/utils/routes/route";
 
 export const scheduleRoutes: RouteGroup = (app, options, done) => {
-  app.get("/:id?", {
-    schema: IdParam,
-    handler: getSchedules,
-    preHandler: [authMiddleware],
-  });
+  app.get(
+    "/:id?",
+    routeHandler<{}, IdParamSchema>(getSchedules, { params: IdParam }, [
+      authMiddleware,
+    ])
+  );
 
-  app.post("/", {
-    schema: bodySchemaBuilder<CreateScheduleDto>(createScheduleSchema),
-    handler: createSchedule,
-    preHandler: [authMiddleware],
-  });
+  app.post(
+    "/",
+    routeHandler<CreateScheduleDto, {}>(
+      createSchedule,
+      { body: createScheduleSchema },
+      [authMiddleware]
+    )
+  );
 
-  app.put("/:id", {
-    schema: {
-      ...paramsSchemaBuilder<IdParamSchema>(IdParam.params),
-      ...bodySchemaBuilder<UpdateScheduleDto>(updateScheduleSchema),
-    },
-    handler: updateSchedule,
-    preHandler: [authMiddleware],
-  });
+  app.put(
+    "/:id",
+    routeHandler<UpdateScheduleDto, IdParamSchema>(
+      updateSchedule,
+      {
+        params: IdParam,
+        body: updateScheduleSchema,
+      },
+      [authMiddleware]
+    )
+  );
 
-  app.delete("/:id", {
-    schema: IdParam,
-    handler: deleteSchedule,
-    preHandler: [authMiddleware],
-  });
+  app.delete(
+    "/:id",
+    routeHandler<{}, IdParamSchema>(deleteSchedule, { params: IdParam }, [
+      authMiddleware,
+    ])
+  );
 
   done();
 };
