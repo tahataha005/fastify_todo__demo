@@ -5,6 +5,7 @@ export type CreateTodoDto = {
   description: string;
   time: string;
   score: number;
+  scheduleId: number;
 };
 
 export const createTodoSchema: BodySchema<CreateTodoDto> = {
@@ -13,6 +14,7 @@ export const createTodoSchema: BodySchema<CreateTodoDto> = {
     description: { type: "string", minLength: 1 },
     time: { type: "string" },
     score: { type: "number" },
+    scheduleId: { type: "number" },
   },
   required: ["title", "time"],
 };

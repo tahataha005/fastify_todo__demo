@@ -6,6 +6,7 @@ export type UpdateTodoDto = {
   time?: string;
   score?: number;
   completed?: boolean;
+  scheduleId?: number;
 };
 
 export const updateTodoSchema: BodySchema<UpdateTodoDto> = {
@@ -15,6 +16,7 @@ export const updateTodoSchema: BodySchema<UpdateTodoDto> = {
     time: { type: "string" },
     completed: { type: "boolean" },
     score: { type: "number" },
+    scheduleId: { type: "number" },
   },
   required: [],
 };
