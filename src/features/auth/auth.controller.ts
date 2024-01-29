@@ -6,6 +6,7 @@ import User from "../../features/auth";
 import { LoginDto } from "./schemas/login.req.schema";
 import { RegisterDto } from "./schemas/register.req";
 import { throwBadRequest } from "../../config/utils/errors/errors";
+import { checkPassword, generateToken, hashPassword } from "./auth.service";
 
 export const login: ControllerMethod = async (request, reply) => {
   const { email, sentPassword } = request.body as LoginDto;
@@ -21,29 +22,16 @@ export const login: ControllerMethod = async (request, reply) => {
     errorCheck: !user,
   });
 
-  const check = bcrypt.compareSync(sentPassword, user!.password);
-
-  throwBadRequest({
-    message: "Invalid credentials",
-    errorCheck: !check,
+  checkPassword({
+    sentPassword,
+    password: user!.password,
   });
 
-  const token = jwt.sign(
-    {
-      id: user!.id,
-      email: user!.email,
-    },
-    process.env.JWT_SECRET!,
-    {
-      expiresIn: "10 days",
-    }
-  );
-
-  const { password, ...data } = user!;
+  const { token, userData } = await generateToken(user!);
 
   return reply.status(200).send({
     token,
-    user: data,
+    user: userData,
   });
 };
 
@@ -61,8 +49,7 @@ export const register: ControllerMethod = async (request, reply) => {
     errorCheck: check !== null,
   });
 
-  const salt = bcrypt.genSaltSync(10);
-  const hashed = bcrypt.hashSync(password, salt);
+  const hashed = await hashPassword(password);
 
   const user = await User.create({
     data: {
@@ -74,16 +61,10 @@ export const register: ControllerMethod = async (request, reply) => {
     },
   });
 
-  const token = jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-    },
-    process.env.JWT_SECRET!
-  );
+  const { token, userData } = await generateToken(user);
 
   return reply.status(201).send({
     token,
-    user,
+    userData,
   });
 };
