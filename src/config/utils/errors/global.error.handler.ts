@@ -22,7 +22,7 @@ stack: ${error.stack}
 
   console.log(logged);
 
-  return reply.send({
+  return reply.status(error.statusCode ?? 500).send({
     statusCode: error.statusCode,
     message: error.message,
     error: error.name,

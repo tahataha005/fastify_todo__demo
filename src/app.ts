@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 import sensible from "@fastify/sensible";
+import cors from "@fastify/cors";
 import fastify from "fastify";
+
 import { welcomeRoute } from "./config/contants/variables/welcome.route";
 import { errorHandler } from "./config/utils/errors/global.error.handler";
 
@@ -15,6 +17,9 @@ app.route({
 });
 
 app.register(sensible);
+app.register(cors, {
+  origin: "http://localhost:3000",
+});
 
 app.setErrorHandler(errorHandler);
 
